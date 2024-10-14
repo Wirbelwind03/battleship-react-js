@@ -1,38 +1,73 @@
-.App {
+html, body, #root {
+  width: 100%;
+}
+
+body {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: grey;
+}
+
+h1 {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+.battleship {
+  width: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.boards-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.board{
+  background-color: #1da2d8;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-self: center;
+}
+
+.board-row {
+  display: flex;
+}
+
+.board-row:not(:first-child) .tile{
+  border-top: 0px;
+}
+
+
+.tile {
+  border: solid black;
+  height: 32px;
+  width: 32px;
+  overflow: hidden;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
 }
 
-.App-link {
-  color: #61dafb;
+.tile.header {
+  background-color: darkgrey; 
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.tile:not(:last-child){
+  border-right: 0px;
+}
+
+.tile.ship{
+  background-color: lightgrey;
+}
+
+.tile.water.preview {
+  background-color: lightgray;
+  opacity: 0.5;
+}
+
+.tile.water.preview-error{
+  background-color: red;
+  opacity: 0.5;
 }
