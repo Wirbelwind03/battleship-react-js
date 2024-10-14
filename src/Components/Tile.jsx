@@ -20,7 +20,7 @@ const Tile = ({ value, rowIndex, columnIndex, onHover, onRightClick, onClick}) =
 
   return (
     <div 
-      className={`tile ${value.tileType.toLowerCase()} ${value.preview}` }
+      className={`tile ${value.tileType.toLowerCase()} ${value.previewType}` }
       onMouseOver={(e) => onHover(e, {rowIndex: rowIndex, columnIndex: columnIndex})}
       onContextMenu={(e) => onRightClick(e, {rowIndex: rowIndex, columnIndex: columnIndex})}
       onClick={(e) => onClick(e)}
