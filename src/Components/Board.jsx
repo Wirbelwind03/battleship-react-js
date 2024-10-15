@@ -1,7 +1,7 @@
 import React, { act, useEffect, useRef, useState } from 'react';
 import Row from './Row';
 
-const Board = ({size}) => {
+const Board = ({size, selectedShip, updateShipCount}) => {
 
     const boardSize = size + 1
 
@@ -14,23 +14,15 @@ const Board = ({size}) => {
         return Array(boardSize).fill(null).map((_, colIndex) => (colIndex === 0 ? {tileType : "HEADER", shipId: null, previewType: ""} : {tileType : "WATER", shipId: null, previewType: ""}));
     });
 
-    const ships = [    
-        { id: 0, length: 2, hit: 0, coordinates: null },
-        { id: 1, length: 3, hit: 0, coordinates: null },
-        { id: 2, length: 3, hit: 0, coordinates: null },
-        { id: 3, length: 4, hit: 0, coordinates: null },
-        { id: 4, length: 5, hit: 0, coordinates: null }
-    ];
-
     const [rows, setRows] = useState(initialRows);
     const [pieceDirection, setPieceDirection] = useState("vertical");
     const [previewCoordinates, setPreviewCoordinates] = useState(null); // Hold the coordinates for the preview
     const canPlaceShip = useRef(true); // If the user can place ships
-    const [playerShips, setShips] = useState(ships);
+    const [boardShips, setShips] = useState([]);
 
-    function resetBoard(newRows){
+    function erasePreviews(newRows){
         // Remove the previews
-        for (let row = 1; row <boardSize; row++){
+        for (let row = 1; row < boardSize; row++){
             for(let column = 1; column < boardSize; column++){
                 const tile = newRows[row][column];
                 newRows[row][column] = {...tile, previewType: ""};
@@ -41,14 +33,14 @@ const Board = ({size}) => {
     function placeShip(coordinates, actionType){
         const newRows = [...rows];
 
-        resetBoard(newRows);
+        erasePreviews(newRows);
 
         let previewType = "preview";
         
         // Reset if the user can place ship to true
         canPlaceShip.current = true;
 
-        const drawPreviewShip = (rowIndex, columnIndex) => {
+        const drawShip = (rowIndex, columnIndex) => {
             const tile = newRows[rowIndex][columnIndex];
 
             switch (actionType){
@@ -74,11 +66,13 @@ const Board = ({size}) => {
             return true; // Continue normal execution
         }
         
-        for (let index = 0; index < 5; index++) {
+        // Draw the ship by looping it's size
+        for (let index = 0; index < selectedShip.size; index++) {
+            // Check if the ship is vertical or horizontal
             const rowIndex = pieceDirection === "vertical" ? coordinates.rowIndex + index : coordinates.rowIndex;
             const columnIndex = pieceDirection === "horizontal" ? coordinates.columnIndex + index : coordinates.columnIndex;
     
-            if (!drawPreviewShip(rowIndex, columnIndex) && actionType === "preview") {
+            if (!drawShip(rowIndex, columnIndex) && actionType === "preview") {
                 index = -1; // Restart the loop if overlap between two ships is found
             }
         }
@@ -88,22 +82,38 @@ const Board = ({size}) => {
 
     // Redraw the preview when direction or coordinates change
     useEffect(() => {
-        if (previewCoordinates) {
+        if (previewCoordinates && selectedShip !== null) {
             placeShip(previewCoordinates, "preview");
         }
-    }, [pieceDirection, previewCoordinates]); // Depend on both direction and coordinates
+    }, [pieceDirection, previewCoordinates]); // Depend on direction or coordinates
+
+    // Redraw the board when the selected ship change
+    useEffect(() => {
+        if (selectedShip){
+            const newRows = [...rows];
+            erasePreviews(newRows);
+            setRows(newRows);
+        }
+    }, [selectedShip]);
+
+    // useEffect (() => {
+    //     if (selectedShip){
+    //         updateShipCount(selectedShip.name);
+    //         canPlaceShip.current = true;
+    //     }
+    // }, [boardShips]);
 
     // Draw the ship preview
     const handleTileHover = (e, coordinates) => {
         const tileValue = e.target.getAttribute('value');
-        if (tileValue !== "HEADER"){
+        if (tileValue !== "HEADER" && selectedShip !== null){
             // Check if the vertical ship get out of bounds
-            if (pieceDirection === "vertical" && coordinates.rowIndex + 5 > boardSize){
-                setPreviewCoordinates({rowIndex: boardSize - 5, columnIndex: coordinates.columnIndex});
+            if (pieceDirection === "vertical" && coordinates.rowIndex + selectedShip.size > boardSize){
+                setPreviewCoordinates({rowIndex: boardSize - selectedShip.size, columnIndex: coordinates.columnIndex});
             }
             // Check if the horionztal ship get out of bounds
-            else if (pieceDirection === "horizontal" && coordinates.columnIndex + 5 > boardSize){
-                setPreviewCoordinates({rowIndex: coordinates.rowIndex, columnIndex: boardSize - 5});
+            else if (pieceDirection === "horizontal" && coordinates.columnIndex + selectedShip.size > boardSize){
+                setPreviewCoordinates({rowIndex: coordinates.rowIndex, columnIndex: boardSize - selectedShip.size});
             }
             else{
                 setPreviewCoordinates(coordinates);
@@ -114,14 +124,15 @@ const Board = ({size}) => {
     // Change direction of the ship
     const handleTileRightClick = (e, coordinates) => {
         const tileValue = e.target.getAttribute('value');
-        if (tileValue !== "HEADER"){
+        if (tileValue !== "HEADER" && selectedShip !== null){
             e.preventDefault();
-        
-            if (pieceDirection === "vertical" && coordinates.columnIndex + 5 > boardSize ){
-                setPreviewCoordinates({rowIndex: coordinates.rowIndex, columnIndex: boardSize - 5})
+            
+            // Check if there isn't a overlap out of bounds with the piece and the board
+            if (pieceDirection === "vertical" && coordinates.columnIndex + selectedShip.size > boardSize ){
+                setPreviewCoordinates({rowIndex: coordinates.rowIndex, columnIndex: boardSize - selectedShip.size})
             }
-            else if (pieceDirection === "horizontal" && coordinates.rowIndex + 5 > boardSize){
-                setPreviewCoordinates({rowIndex: boardSize - 5, columnIndex: coordinates.columnIndex})
+            else if (pieceDirection === "horizontal" && coordinates.rowIndex + selectedShip.size > boardSize){
+                setPreviewCoordinates({rowIndex: boardSize - selectedShip.size, columnIndex: coordinates.columnIndex})
             }
                 
             let newPieceDirection = pieceDirection === "vertical" ? "horizontal" : "vertical";
@@ -132,8 +143,14 @@ const Board = ({size}) => {
     }
 
     const handleTileClick = (e) => {
-        if (canPlaceShip.current === true){
+        if (canPlaceShip.current === true && selectedShip && selectedShip.count > 0){
+            //canPlaceShip.current = false;
             placeShip(previewCoordinates, "place");
+            const newShips = [...boardShips];
+            const newShip = {...selectedShip, id: boardShips.length};
+            delete newShip.count;
+            newShips.push(newShip);
+            setShips(newShips);
         }
     }
 

@@ -6,7 +6,7 @@ const Row = ({ columns, rowIndex, onTileHover, onTileRightClick, onTileClick }) 
     <div className="board-row" key={rowIndex}>
       {columns.map((tile, columIndex) => (
         <Tile 
-          key={`${rowIndex}-${columIndex}`} 
+          key={columIndex} 
           value={tile}
           rowIndex={rowIndex} 
           columnIndex={columIndex}

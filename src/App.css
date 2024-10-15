@@ -6,7 +6,7 @@ body {
   display:flex;
   flex-direction: column;
   align-items: center;
-  background-color: grey;
+  background-color: #3b3b3b;
 }
 
 h1 {
@@ -15,13 +15,16 @@ h1 {
 
 
 .battleship {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
 }
 
 .boards-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  /* justify-content: space-evenly; */
 }
 
 .board{
@@ -59,7 +62,7 @@ h1 {
 }
 
 .tile.ship{
-  background-color: lightgrey;
+  background-color: #71797E;
 }
 
 .tile.water.preview {
@@ -75,4 +78,54 @@ h1 {
 .tile.water.preview-error{
   background-color: red;
   opacity: 0.5;
+}
+
+.ship-selector{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  border: solid black;
+  margin-right: 16px;
+}
+
+.ship-selector h3 {
+  width: 100%;
+  text-align: center;
+  border-bottom: solid black;
+  margin: 0px;
+}
+
+.ship-detail{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-bottom: solid black;
+  background-color: grey;
+}
+
+.ship-detail-specs {
+  width: 100%;
+  display: flex;
+}
+
+.ship-detail .ship-detail-specs p {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.ship-detail:last-child{
+  border-bottom: 0;
+}
+
+.ship-tiles{
+  display: flex;
+}
+
+.ship-tiles .tile {
+  width: 16px;
+  height: 16px;
+  background-color: #71797E;
 }
