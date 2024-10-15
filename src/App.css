@@ -6,7 +6,7 @@ body {
   display:flex;
   flex-direction: column;
   align-items: center;
-  background-color: #3b3b3b;
+  background-color: #505050;
 }
 
 h1 {
@@ -25,10 +25,10 @@ h1 {
   display: flex;
   flex-direction: row;
   /* justify-content: space-evenly; */
+  margin-bottom: 32px;
 }
 
 .board{
-  background-color: #1da2d8;
   display: flex;
   flex-direction: column;
   align-self: center;
@@ -65,6 +65,10 @@ h1 {
   background-color: #71797E;
 }
 
+.tile.water{
+  background-color: #046997;
+}
+
 .tile.water.preview {
   background-color: lightgray;
   opacity: 0.5;
@@ -94,6 +98,7 @@ h1 {
   text-align: center;
   border-bottom: solid black;
   margin: 0px;
+  background-color: grey;
 }
 
 .ship-detail{
@@ -109,11 +114,21 @@ h1 {
 .ship-detail-specs {
   width: 100%;
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
 
-.ship-detail .ship-detail-specs p {
-  margin-top: 8px;
-  margin-bottom: 8px;
+.ship-detail .ship-detail-specs span {
+  padding: 4px 8px;
+}
+
+.ship-detail .ship-detail-specs span:first-child {
+  padding-right: 0px;
+}
+
+.ship-detail .ship-detail-specs span:last-child {
+  border-left: solid black;
+  border-bottom: solid black;
 }
 
 .ship-detail:last-child{
