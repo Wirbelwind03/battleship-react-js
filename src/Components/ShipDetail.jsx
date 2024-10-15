@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 const ShipDetail = ({name, size, count, onClick}) => {
 
-    const [shipCount, setCount] = useState(count);
     const shipTiles = Array(size).fill(null);
 
   return (
@@ -11,8 +10,8 @@ const ShipDetail = ({name, size, count, onClick}) => {
         onClick={() => onClick({name: name, size: size})}
         >
         <div className="ship-detail-specs">
-            <p>{name}</p>
-            <p></p>
+            <span>{name}</span>
+            <span>x{count}</span>
         </div>
         <div className="ship-tiles">
             {shipTiles.map((tile, columIndex) => (

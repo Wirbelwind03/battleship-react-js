@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Board from './Board'
 import ShipSelector from './ShipSelector'
 
@@ -8,6 +8,7 @@ const BattleShip = () => {
 
   const [boardRows, setBoardRows] = useState(10);
   const [boardColumns, setBoardColumns] = useState(10);
+  
   const [ships, setShips] = useState([
     { name: "Destroyer", size: 2, count: 2 },
     { name: "Cruiser", size: 2, count: 2 },
@@ -16,6 +17,7 @@ const BattleShip = () => {
     { name: "Carrier", size: 5, count: 2 }
   ]);
   const [selectedShip, setSelectedShip] = useState(null);
+  const [isGameReady, setIsGameReady] = useState(true);
 
   const handleBoardRowsChange = (e) => {
     setBoardRows(e.target.value);
@@ -44,14 +46,14 @@ const BattleShip = () => {
         <h1>Battleship</h1>
         <div className='boards-container'>
             <ShipSelector ships={ships} setSelectedShip={setSelectedShip}/>
-            <Board updateShipCount={updateShipCount} selectedShip={selectedShip} size={BOARD_SIZE} />
+            <Board updateShipCount={updateShipCount} setIsGameReady={setIsGameReady} selectedShip={selectedShip} size={BOARD_SIZE} />
         </div>
-        <div>
+        {/* <div>
           <input type='number' value={boardRows} min={10} max={16} onChange={handleBoardRowsChange}></input>
           <span>x</span>
           <input type='number' value={boardColumns} min={10} max={16} onChange={handleBoardColmunsChange}></input>
-        </div>
-        <button>Start game</button>
+        </div> */}
+        <button disabled={isGameReady}>Start game</button>
         
     </div>
   )

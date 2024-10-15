@@ -1,7 +1,7 @@
 import React, { act, useEffect, useRef, useState } from 'react';
 import Row from './Row';
 
-const Board = ({size, selectedShip, updateShipCount}) => {
+const Board = ({size, selectedShip, updateShipCount, setIsGameReady}) => {
 
     const boardSize = size + 1
 
@@ -31,6 +31,10 @@ const Board = ({size, selectedShip, updateShipCount}) => {
     }
 
     function placeShip(coordinates, actionType){
+        if (selectedShip.count <= 0){
+            return;
+        }
+
         const newRows = [...rows];
 
         erasePreviews(newRows);
@@ -56,7 +60,7 @@ const Board = ({size, selectedShip, updateShipCount}) => {
 
                 // Draw the ship
                 case "place":
-                    newRows[rowIndex][columnIndex] = { ...tile, tileType: "SHIP" };
+                    newRows[rowIndex][columnIndex] = { ...tile, shipId: boardShips.length, tileType: "SHIP" };
                     break;
 
                 default:
@@ -99,7 +103,6 @@ const Board = ({size, selectedShip, updateShipCount}) => {
     // useEffect (() => {
     //     if (selectedShip){
     //         updateShipCount(selectedShip.name);
-    //         canPlaceShip.current = true;
     //     }
     // }, [boardShips]);
 
@@ -144,13 +147,21 @@ const Board = ({size, selectedShip, updateShipCount}) => {
 
     const handleTileClick = (e) => {
         if (canPlaceShip.current === true && selectedShip && selectedShip.count > 0){
-            //canPlaceShip.current = false;
             placeShip(previewCoordinates, "place");
+            
+            // Add ship to boardShips
             const newShips = [...boardShips];
             const newShip = {...selectedShip, id: boardShips.length};
             delete newShip.count;
             newShips.push(newShip);
             setShips(newShips);
+
+            // Disable so the user can't place multiple times in the same place
+            canPlaceShip.current = false;
+
+            updateShipCount(selectedShip.name);
+
+            setIsGameReady(false);
         }
     }
 
