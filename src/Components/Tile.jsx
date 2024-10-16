@@ -3,8 +3,6 @@ import React from 'react'
 const TILE_HEADER = "HEADER";
 const TILE_WATER = "WATER";
 const TILE_SHIP = "SHIP";
-const TILE_SHIP_PREVIEW = "SHIP-PREVIEW";
-const TILE_SHIP_PREVIEW_ERROR = "SHIP-PREVIEW-ERROR"
 
 const Tile = ({ value, rowIndex, columnIndex, onHover, onRightClick, onClick}) => {
     let content = "";

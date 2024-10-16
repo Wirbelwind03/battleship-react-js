@@ -13,6 +13,9 @@ h1 {
   text-align: center;
 }
 
+.remove{
+  display: none !important;
+}
 
 .battleship {
   display: flex;
@@ -21,11 +24,22 @@ h1 {
   width: 100%;
 }
 
-.boards-container {
+.board-setup-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.board-setup {
   display: flex;
   flex-direction: row;
-  /* justify-content: space-evenly; */
   margin-bottom: 32px;
+}
+
+.boards-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
 .board{
@@ -109,6 +123,7 @@ h1 {
   height: 100%;
   border-bottom: solid black;
   background-color: grey;
+  cursor: pointer;
 }
 
 .ship-detail-specs {

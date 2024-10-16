@@ -1,7 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import ShipDetail from './ShipDetail'
 
 const ShipSelector = ({ships, setSelectedShip}) => {
+
+  // Change the selected ship
     const handleShipDetailClick = (ship) => {
         setSelectedShip(ship);
     }
