@@ -6,8 +6,9 @@ const BattleShip = () => {
 
   const [isGameNotReady, disableStartGameButton] = useState(true);
   const [isGameStarted, setIsGameStarted] = useState(false);
-  //const [playerBoard, setPlayerBoard] = useState(null);
+
   const playerBoard = useRef(null);
+  const playerShips = useRef([]);
 
   const startGame = () => {
     setIsGameStarted(true);
@@ -21,13 +22,14 @@ const BattleShip = () => {
             disableStartGameButton={disableStartGameButton} 
             isGameStarted={isGameStarted} 
             playerBoard={playerBoard}
+            playerShips={playerShips}
           />
           <button onClick={() => startGame()} disabled={isGameNotReady}>Start game</button>
         </div>
         
         <div className={`boards-container ${!isGameStarted ? 'remove' : ' '}`}>
-          {playerBoard.current && isGameStarted ? <Board rows={playerBoard.current} /> : null}
-          {playerBoard.current && isGameStarted ? <Board rows={playerBoard.current} /> : null}
+          {playerBoard.current && isGameStarted ? <Board size={playerBoard.current.length} rows={playerBoard.current} ships={playerShips.current} /> : null}
+          {playerBoard.current && isGameStarted ? <Board size={playerBoard.current.length} rows={playerBoard.current} ships={playerShips.current} /> : null}
         </div>
         
         
