@@ -29,7 +29,6 @@ const BattleShip = () => {
     else {
       setPlayerTurn(playerTurn++);
     }
-    
   }
 
   return (
