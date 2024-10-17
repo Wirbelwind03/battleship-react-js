@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Row from './Row';
 import { erasePreviews } from '../utils/BoardUtils';
+import { TILE_HEADER, TILE_SHIP, TILE_WATER } from './Tile';
 
 const BoardEditor = ({size, selectedShip, updateShipCount, disableStartGameButton, playerBoard, playerShips}) => {
 
@@ -9,10 +10,10 @@ const BoardEditor = ({size, selectedShip, updateShipCount, disableStartGameButto
     const initialRows = Array(boardSize).fill(null).map((_, rowIndex) => {
         // Set first row with nulls
         if (rowIndex === 0) {
-            return Array(boardSize).fill({tileType : "HEADER", shipId: null, previewType: "", isShot: false});
+            return Array(boardSize).fill({tileType : TILE_HEADER, shipId: null, previewType: "", isShot: false});
         }
         // For other rows, set the first column to null and others to a board type
-        return Array(boardSize).fill(null).map((_, colIndex) => (colIndex === 0 ? {tileType : "HEADER", shipId: null, previewType: "", isShot: false} : {tileType : "WATER", shipId: null, previewType: "", isShot: false}));
+        return Array(boardSize).fill(null).map((_, colIndex) => (colIndex === 0 ? {tileType : TILE_HEADER, shipId: null, previewType: "", isShot: false} : {tileType : TILE_WATER, shipId: null, previewType: "", isShot: false}));
     });
 
     const [rows, setRows] = useState(initialRows); // The board
@@ -48,7 +49,7 @@ const BoardEditor = ({size, selectedShip, updateShipCount, disableStartGameButto
                     // Draw preview of the ship
                     case "preview":
                         // Check if there's a overlap with another ship
-                        if (tile.tileType === "SHIP" && previewType !== "preview-error") {
+                        if (tile.tileType === TILE_SHIP && previewType !== "preview-error") {
                             // If there's one, change the previewType to a error, and paint the whole ship preview to a error
                             previewType = "preview-error";
                             canPlaceShip.current = false; // Remove the ability for the user to place ship
@@ -59,7 +60,7 @@ const BoardEditor = ({size, selectedShip, updateShipCount, disableStartGameButto
     
                     // Draw the ship
                     case "place":
-                        newRows[rowIndex][columnIndex] = { ...tile, shipId: playerShips.current.length, tileType: "SHIP" };
+                        newRows[rowIndex][columnIndex] = { ...tile, shipId: playerShips.current.length, tileType: TILE_SHIP };
                         break;
     
                     default:

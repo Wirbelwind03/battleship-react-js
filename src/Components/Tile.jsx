@@ -1,8 +1,8 @@
 import React from 'react'
 
-const TILE_HEADER = "HEADER";
-const TILE_WATER = "WATER";
-const TILE_SHIP = "SHIP";
+export const TILE_HEADER = "HEADER";
+export const TILE_WATER = "WATER";
+export const TILE_SHIP = "SHIP";
 
 const Tile = ({ value, rowIndex, columnIndex, onHover, onRightClick, onClick}) => {
     let content = "";

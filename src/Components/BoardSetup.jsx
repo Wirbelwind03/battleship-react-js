@@ -6,8 +6,8 @@ let BOARD_SIZE = 10
 
 const BoardSetup = ({disableStartGameButton, isGameStarted, playerBoard, playerShips}) => {
 
-    const [boardRows, setBoardRows] = useState(10);
-    const [boardColumns, setBoardColumns] = useState(10);
+    const [boardRows, setBoardRows] = useState(11);
+    const [boardColumns, setBoardColumns] = useState(11);
     
     const [shipsForSelector, setShipsForSelector] = useState([
       { name: "Destroyer", size: 2, count: 2, hits: 0 },
@@ -17,20 +17,6 @@ const BoardSetup = ({disableStartGameButton, isGameStarted, playerBoard, playerS
       { name: "Carrier", size: 5, count: 2, hits: 0 }
     ]);
     const [selectedShip, setSelectedShip] = useState(null);
-
-    function generateBoard(){
-
-      const newBoard = Array(10).fill(null).map((_, rowIndex) => {
-        // Set first row with nulls
-        if (rowIndex === 0) {
-            return Array(10).fill({tileType : "HEADER", shipId: null, previewType: "", isShot: false});
-        }
-        // For other rows, set the first column to null and others to a board type
-        return Array(10).fill(null).map((_, colIndex) => (colIndex === 0 ? {tileType : "HEADER", shipId: null, previewType: "", isShot: false} : {tileType : "WATER", shipId: null, previewType: "", isShot: false}));
-      });
-
-        
-    };
   
     const handleBoardRowsChange = (e) => {
       setBoardRows(e.target.value);
