@@ -1,8 +1,8 @@
-import React, { act, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Row from './Row'
 import { erasePreviews } from '../utils/BoardUtils';
 
-const Board = ({size, rows, ships}) => {
+const Board = ({size, rows, ships, isOpponent, isYourTurn}) => {
     const boardSize = size;
 
     const [board, setBoard] = useState(rows);
@@ -42,8 +42,16 @@ const Board = ({size, rows, ships}) => {
         }
     }, [previewCoordinates]);
 
+    useEffect(() => {
+        if (playerLives.current === 0){
+            
+        }
+    }, [playerLives])
+
 
     const handleTileHover = (e, coordinates) => {
+        if (!isYourTurn || isOpponent) return;
+
         const tile = board[coordinates.rowIndex][coordinates.columnIndex]; 
         if (tile.tileType !== "HEADER"){
             setPreviewCoordinates(coordinates);
@@ -52,6 +60,8 @@ const Board = ({size, rows, ships}) => {
     }
 
     const handleTileRightClick = (e, coordinates) => {
+        if (!isYourTurn || isOpponent) return;
+
         const tile = board[coordinates.rowIndex][coordinates.columnIndex]; 
         if (tile.tileType !== "HEADER"){
             e.preventDefault();
@@ -59,14 +69,18 @@ const Board = ({size, rows, ships}) => {
     }
 
     const handleTileClick = (e, coordinates) => {
+        if (!isYourTurn || isOpponent) return;
+
         const tile = board[coordinates.rowIndex][coordinates.columnIndex]; 
         if (tile.tileType !== "HEADER" && !tile.isShot){
             updateTile(coordinates, "shoot");
+            // If the tile hit is a ship
             if (tile.tileType === "SHIP"){
-                const shipHit = boardShips[tile.shipId];
-                shipHit.hits++;
+                const shipHit = boardShips[tile.shipId]; // Get the ship that was been hit
+                shipHit.hits++; // 
+                // Check if the ship is out of health
                 if (shipHit.hits === shipHit.size){
-                    playerLives.current--;
+                    playerLives.current--; // Remove lives from the player
                 }
             }
         }
@@ -74,7 +88,7 @@ const Board = ({size, rows, ships}) => {
 
   return (
     <div 
-        className='board'
+        className={`board ${isOpponent ? "opponent" : ""}`}
         onMouseLeave={() => {setPreviewCoordinates(null)}}
     >
         {rows.map((columns, rowIndex) => (

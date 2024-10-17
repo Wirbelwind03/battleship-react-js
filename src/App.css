@@ -79,6 +79,14 @@ h1 {
   background-color: #71797E;
 }
 
+.tile.ship.shot{
+  background-color: #71797E !important;
+}
+
+.board.opponent .tile.ship{
+  background-color: #046997;
+}
+
 .tile.water{
   background-color: #046997;
 }

@@ -3,6 +3,7 @@ import React from 'react'
 export const TILE_HEADER = "HEADER";
 export const TILE_WATER = "WATER";
 export const TILE_SHIP = "SHIP";
+export const TILE_SHIP_HIT = "SHIP-HIT"
 
 const Tile = ({ value, rowIndex, columnIndex, onHover, onRightClick, onClick}) => {
     let content = "";
@@ -21,7 +22,7 @@ const Tile = ({ value, rowIndex, columnIndex, onHover, onRightClick, onClick}) =
 
   return (
     <div 
-      className={`tile ${value.tileType.toLowerCase()} ${value.previewType}` }
+      className={`tile ${value.tileType.toLowerCase()} ${value.previewType} ${value.isShot ? "shot" : ""}` }
       onMouseOver={(e) => onHover(e, {rowIndex: rowIndex, columnIndex: columnIndex})}
       onContextMenu={(e) => onRightClick(e, {rowIndex: rowIndex, columnIndex: columnIndex})}
       onClick={(e) => onClick(e, {rowIndex: rowIndex, columnIndex: columnIndex})}

@@ -1,75 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react'
 import BoardSetup from './BoardSetup'
 import Board from './Board';
-import { TILE_SHIP } from './Tile';
+import { generateBoard } from '../utils/BoardUtils';
 
 const BattleShip = () => {
 
   const [isGameNotReady, disableStartGameButton] = useState(true);
   const [isGameStarted, setIsGameStarted] = useState(false);
+  const [playerTurn, setPlayerTurn] = useState(0);
 
   const playerBoard = useRef(null);
   const playerShips = useRef([]);
-
-  function placeShip(board, rowIndex, columIndex, shipLength, direction){
-    if ((direction === "vertical" && rowIndex + shipLength > 11) || 
-        (direction === "horizontal" && columIndex + shipLength > 11)) {
-      return false;
-    }
-
-    const isOverlapping = (rowIndex, columIndex) => {
-      const tile = board[rowIndex][columIndex]
-
-      if (tile.tileType === TILE_SHIP){
-        return true;
-      }
-      else{
-        board[rowIndex][columIndex] = {...tile, tileType: TILE_SHIP}
-      }
-
-    }
-
-    for (let index = 0; index < shipLength; index++) {
-      // Check if the ship is vertical or horizontal
-      const rowIndex = direction === "vertical" ? rowIndex + index : rowIndex;
-      const columnIndex = direction === "horizontal" ? columnIndex + index : columnIndex;
-      
-      // Restart the loop if overlap between two ships is found
-      if (isOverlapping(rowIndex, columnIndex)) {
-          index = -1; 
-      }
-    }
-
-    return true;
-  }
   
-  function generateBoard(ships){
-    const newBoard = Array(11).fill(null).map((_, rowIndex) => {
-      // Set first row with nulls
-      if (rowIndex === 0) {
-          return Array(11).fill({tileType : "HEADER", shipId: null, previewType: "", isShot: false});
-      }
-      // For other rows, set the first column to null and others to a board type
-      return Array(11).fill(null).map((_, colIndex) => (colIndex === 0 ? {tileType : "HEADER", shipId: null, previewType: "", isShot: false} : {tileType : "WATER", shipId: null, previewType: "", isShot: false}));
-    });
-
-    ships.forEach(ship => {
-      let isPlaced = false;
-      while (!isPlaced){
-        const direction = Math.random() < 0.5 ? "vertical" : "horizontal";
-        const rowIndex = Math.floor(Math.random() * 11) + 1;
-        const columnIndex = Math.floor(Math.random() * 11) + 1;
-        if (placeShip(newBoard, rowIndex, columnIndex, ship.size, direction)){
-          isPlaced = true;
-        }
-      }
-    });
-  };
-
+  const opponentBoard = useRef(null);
+  const opponentShips = useRef([]);
 
   const startGame = () => {
+    opponentShips.current = JSON.parse(JSON.stringify(playerShips.current));
+    opponentBoard.current = generateBoard(opponentShips.current);
     setIsGameStarted(true);
   };
+
+  const handleTurns = () => {
+    if (playerTurn === 1){
+      playerTurn = 0;
+      setPlayerTurn(playerTurn);
+    }
+    else {
+      setPlayerTurn(playerTurn++);
+    }
+    
+  }
 
   return (
     <div className='battleship'>
@@ -85,8 +46,24 @@ const BattleShip = () => {
         </div>
         
         <div className={`boards-container ${!isGameStarted ? 'remove' : ' '}`}>
-          {playerBoard.current && isGameStarted ? <Board size={playerBoard.current.length} rows={playerBoard.current} ships={playerShips.current} /> : null}
-          {playerBoard.current && isGameStarted ? <Board size={playerBoard.current.length} rows={playerBoard.current} ships={playerShips.current} /> : null}
+          {playerBoard.current && isGameStarted ? (
+            <Board 
+              size={playerBoard.current.length} 
+              rows={playerBoard.current} 
+              ships={playerShips.current}
+              isOpponent={false} 
+              isYourTurn={playerTurn === 0}
+            />
+            ) : null}
+          {playerBoard.current && isGameStarted ? (
+            <Board 
+              size={opponentBoard.current.length} 
+              rows={opponentBoard.current} 
+              ships={opponentShips.current} 
+              isOpponent={true} 
+              isYourTurn={playerTurn === 1}
+            /> 
+            ) : null}
         </div>
         
         
