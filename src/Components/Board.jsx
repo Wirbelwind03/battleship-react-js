@@ -2,13 +2,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import Row from './Row'
 import { erasePreviews } from '../utils/BoardUtils';
 
-const Board = ({size, rows, ships, isOpponent, isYourTurn}) => {
+const Board = ({size, rows, ships, isAI, isOpponent, isYourTurn, changeTurns}) => {
     const boardSize = size;
 
     const [board, setBoard] = useState(rows);
     const [boardShips, setBoardShips] = useState(ships);
     const [previewCoordinates, setPreviewCoordinates] = useState(null); // Hold the coordinates for the preview
     const playerLives = useRef(boardShips.length);
+
+    function handleAI(){
+        changeTurns();
+    }
 
     const updateTile = (coordinates, actionType) => {
         const newBoard = {...board};
@@ -48,29 +52,7 @@ const Board = ({size, rows, ships, isOpponent, isYourTurn}) => {
         }
     }, [playerLives])
 
-
-    const handleTileHover = (e, coordinates) => {
-        if (!isYourTurn || isOpponent) return;
-
-        const tile = board[coordinates.rowIndex][coordinates.columnIndex]; 
-        if (tile.tileType !== "HEADER"){
-            setPreviewCoordinates(coordinates);
-        }
-
-    }
-
-    const handleTileRightClick = (e, coordinates) => {
-        if (!isYourTurn || isOpponent) return;
-
-        const tile = board[coordinates.rowIndex][coordinates.columnIndex]; 
-        if (tile.tileType !== "HEADER"){
-            e.preventDefault();
-        }
-    }
-
-    const handleTileClick = (e, coordinates) => {
-        if (!isYourTurn || isOpponent) return;
-
+    const shot = (coordinates) => {
         const tile = board[coordinates.rowIndex][coordinates.columnIndex]; 
         if (tile.tileType !== "HEADER" && !tile.isShot){
             updateTile(coordinates, "shoot");
@@ -83,7 +65,34 @@ const Board = ({size, rows, ships, isOpponent, isYourTurn}) => {
                     playerLives.current--; // Remove lives from the player
                 }
             }
+
+            changeTurns();
         }
+    }
+
+    const handleTileHover = (e, coordinates) => {
+        //if (!isYourTurn || isOpponent) return;
+
+        const tile = board[coordinates.rowIndex][coordinates.columnIndex]; 
+        if (tile.tileType !== "HEADER"){
+            setPreviewCoordinates(coordinates);
+        }
+
+    }
+
+    const handleTileRightClick = (e, coordinates) => {
+        //if (!isYourTurn || isOpponent) return;
+
+        const tile = board[coordinates.rowIndex][coordinates.columnIndex]; 
+        if (tile.tileType !== "HEADER"){
+            e.preventDefault();
+        }
+    }
+
+    const handleTileClick = (e, coordinates) => {
+        //if (!isYourTurn || isOpponent) return;
+
+        shot(coordinates);
     }
 
   return (

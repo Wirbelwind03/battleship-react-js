@@ -21,14 +21,8 @@ const BattleShip = () => {
     setIsGameStarted(true);
   };
 
-  const handleTurns = () => {
-    if (playerTurn === 1){
-      playerTurn = 0;
-      setPlayerTurn(playerTurn);
-    }
-    else {
-      setPlayerTurn(playerTurn++);
-    }
+  const changeTurns = () => {
+    setPlayerTurn(prevTurn => (prevTurn + 1) % 2);
   }
 
   return (
@@ -50,8 +44,10 @@ const BattleShip = () => {
               size={playerBoard.current.length} 
               rows={playerBoard.current} 
               ships={playerShips.current}
+              isAI={false}
               isOpponent={false} 
               isYourTurn={playerTurn === 0}
+              changeTurns={changeTurns}
             />
             ) : null}
           {playerBoard.current && isGameStarted ? (
@@ -59,8 +55,10 @@ const BattleShip = () => {
               size={opponentBoard.current.length} 
               rows={opponentBoard.current} 
               ships={opponentShips.current} 
+              isAI={true}
               isOpponent={true} 
               isYourTurn={playerTurn === 1}
+              changeTurns={changeTurns}
             /> 
             ) : null}
         </div>

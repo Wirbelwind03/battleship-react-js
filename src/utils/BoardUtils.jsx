@@ -1,6 +1,5 @@
 import { TILE_HEADER, TILE_SHIP, TILE_WATER } from "../Components/Tile";
 
-
 export function erasePreviews(newRows, boardSize){
     // Remove the previews;
     for (let row = 1; row < boardSize; row++){
@@ -10,6 +9,13 @@ export function erasePreviews(newRows, boardSize){
         }
     }
 };
+
+export const getRandomCoordinates = (boardSize) => {
+  const randomRowIndex = Math.floor(Math.random() * boardSize) + 1;
+  const randomColumnIndex = Math.floor(Math.random() * boardSize) + 1;
+  return { rowIndex: randomRowIndex, columnIndex: randomColumnIndex };
+};
+
 
 export function placeShip(board, coordinates, ship, direction){
     if ((direction === "vertical" && coordinates.rowIndex + ship.size > 11) || 
@@ -61,9 +67,8 @@ export function placeShip(board, coordinates, ship, direction){
       let isPlaced = false;
       while (!isPlaced){
         const direction = Math.random() < 0.5 ? "vertical" : "horizontal";
-        const rowIndex = Math.floor(Math.random() * 11) + 1;
-        const columnIndex = Math.floor(Math.random() * 11) + 1;
-        if (placeShip(newBoard, {rowIndex: rowIndex, columnIndex: columnIndex}, ship, direction)){
+        const randomCoordinates = getRandomCoordinates(11);
+        if (placeShip(newBoard, randomCoordinates, ship, direction)){
 
           isPlaced = true;
         }
